@@ -1,0 +1,968 @@
+@{ ViewData["Title"] = "首页"; }
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8 text-amber-800">族谱管理系统</h1>
+
+ <!-- 系统统计卡片 -->
+    <div class="mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-4" id="statsGrid">
+            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100 hover:shadow-2xl transition-shadow duration-300">
+                <h5 class="text-lg font-semibold text-amber-600 mb-2">祖训总数</h5>
+                <p class="text-5xl font-bold text-amber-800">@ViewBag.TotalFamilyRules</p>
+                <a href="@Url.Action("Index", "FamilyRule")" class="text-amber-600 hover:text-amber-800 font-medium mt-2 inline-block">查看详情</a>
+            </div>
+            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100 hover:shadow-2xl transition-shadow duration-300">
+                <h5 class="text-lg font-semibold text-amber-600 mb-2">宗族活动总数</h5>
+                <p class="text-5xl font-bold text-amber-800">@ViewBag.TotalClanActivities</p>
+                <a href="@Url.Action("Index", "ClanActivity")" class="text-amber-600 hover:text-amber-800 font-medium mt-2 inline-block">查看详情</a>
+            </div>
+            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100 hover:shadow-2xl transition-shadow duration-300">
+                <h5 class="text-lg font-semibold text-amber-600 mb-2">家庭成员总数</h5>
+                <p class="text-5xl font-bold text-amber-800">@ViewBag.TotalFamilyMembers</p>
+                <a href="@Url.Action("Index", "FamilyMember")" class="text-amber-600 hover:text-amber-800 font-medium mt-2 inline-block">查看详情</a>
+            </div>
+            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100 hover:shadow-2xl transition-shadow duration-300">
+                <h5 class="text-lg font-semibold text-amber-600 mb-2">字辈总数</h5>
+                <p class="text-5xl font-bold text-amber-800">@ViewBag.TotalZiwei</p>
+                <a href="@Url.Action("Index", "Ziwei")" class="text-amber-600 hover:text-amber-800 font-medium mt-2 inline-block">查看详情</a>
+            </div>
+            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100 hover:shadow-2xl transition-shadow duration-300 hidden" id="moreStats">
+                <h5 class="text-lg font-semibold text-amber-600 mb-2">宗族总数</h5>
+                <p class="text-5xl font-bold text-amber-800">@ViewBag.TotalClans</p>
+                <a href="@Url.Action("Index", "Clan")" class="text-amber-600 hover:text-amber-800 font-medium mt-2 inline-block">查看详情</a>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <button id="toggleMore" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors duration-300 flex items-center mx-auto">
+                <span id="toggleText">更多模块</span>
+                <svg id="toggleIcon" class="w-5 h-5 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 家族树展示 -->
+    <div class="mb-8">
+        <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100">
+            <h5 class="text-xl font-semibold text-amber-800 mb-4">家族树</h5>
+            
+            <!-- 家族树控制工具栏 -->
+            <div class="flex flex-wrap items-center justify-between mb-4 gap-4">
+                <!-- 缩放控制 -->
+                <div class="flex items-center gap-2">
+                    <button id="zoomOut" class="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-md">
+                        - 缩小
+                    </button>
+                    <input type="range" id="zoomSlider" min="0.5" max="2" step="0.1" value="1" class="w-32 h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer">
+                    <button id="zoomIn" class="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-md">
+                        + 放大
+                    </button>
+                    <span id="zoomValue" class="text-amber-800 font-medium">100%</span>
+                </div>
+                
+                <!-- 树控制按钮 -->
+                <div class="flex items-center gap-2">
+                    <button id="expandAll" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg">
+                        全部展开
+                    </button>
+                    <button id="collapseAll" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg">
+                        全部折叠
+                    </button>
+                    <button id="exportPdf" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">
+                        导出PDF
+                    </button>
+                </div>
+                
+                <!-- 搜索功能 -->
+                <div class="flex items-center gap-2">
+                    <input type="text" id="searchInput" placeholder="搜索家族成员..." class="px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <button id="searchButton" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg">
+                        搜索
+                    </button>
+                    <button id="resetButton" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg">
+                        重置
+                    </button>
+                </div>
+            </div>
+            
+            <div id="familyTree" class="family-tree-container">
+                <div class="family-tree">
+                    <!-- 家族树将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最新动态 -->
+    <div class="mb-8">
+        <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100">
+            <h5 class="text-xl font-semibold text-amber-800 mb-4 flex items-center">
+                <span class="mr-2">📰</span>
+                最新动态
+            </h5>
+            
+            @if (ViewBag.LatestNews != null && ViewBag.LatestNews.Count > 0)
+            {
+                <div class="news-container">
+                    <div class="news-content">
+                        @foreach (var news in ViewBag.LatestNews)
+                        {
+                            <div class="news-item">
+                                <div class="news-icon">@news.Icon</div>
+                                <div class="news-content-item">
+                                    <div class="news-header">
+                                        <span class="news-type">@news.Type</span>
+                                        <span class="news-date">@news.CreatedAt.ToString("MM-dd HH:mm")</span>
+                                    </div>
+                                    <div class="news-title">@news.Title</div>
+                                    <div class="news-description">@news.Description</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center text-gray-500 py-8">
+                    <div class="text-4xl mb-2">📭</div>
+                    <p>暂无最新动态</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    
+</div>
+
+<style>
+    /* 家族树样式 */
+    .family-tree-container {
+        overflow-x: auto;
+        overflow-y: auto;
+        padding: 20px;
+        min-height: 400px;
+        max-height: 80vh;
+        background-color: rgba(255, 251, 235, 0.3);
+        border-radius: 8px;
+        scroll-behavior: smooth;
+    }
+    
+    .family-tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: max-content;
+        transition: transform 0.3s ease;
+    }
+    
+    .family-tree-level {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 40px;
+        position: relative;
+        gap: 20px;
+    }
+    
+    .family-tree-level::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        width: 2px;
+        height: 20px;
+        background-color: #d97706;
+        transform: translateX(-50%);
+    }
+    
+    .family-tree-level:last-child::after {
+        display: none;
+    }
+    
+    .family-tree-node-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .family-tree-node {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin: 0 15px;
+    }
+    
+    .family-tree-node::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -15px;
+        width: 15px;
+        height: 2px;
+        background-color: #d97706;
+    }
+    
+    .family-tree-node:first-child::before {
+        display: none;
+    }
+    
+    .family-tree-person {
+        padding: 12px 18px;
+        background-color: rgba(255, 251, 235, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid #fbbf24;
+        border-radius: 12px;
+        min-width: 130px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .family-tree-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 3px solid rgba(217, 119, 6, 0.3);
+        object-fit: cover;
+        background-color: rgba(255, 251, 235, 0.8);
+        transition: all 0.3s ease;
+    }
+    
+    .family-tree-avatar.male {
+        border-color: rgba(59, 130, 246, 0.4);
+    }
+    
+    .family-tree-avatar.female {
+        border-color: rgba(236, 72, 153, 0.4);
+    }
+    
+    .family-tree-avatar:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+    
+    .family-tree-avatar-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 3px solid rgba(217, 119, 6, 0.3);
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .family-tree-avatar-placeholder.male {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border-color: rgba(59, 130, 246, 0.4);
+    }
+    
+    .family-tree-avatar-placeholder.female {
+        background: linear-gradient(135deg, #ec4899, #db2777);
+        border-color: rgba(236, 72, 153, 0.4);
+    }
+    
+    .family-tree-avatar-placeholder:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+    
+    .family-tree-person:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(217, 119, 6, 0.25);
+    }
+    
+    .family-tree-person.male {
+        border-color: #3b82f6;
+        background-color: rgba(59, 130, 246, 0.1);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .family-tree-person.female {
+        border-color: #ec4899;
+        background-color: rgba(236, 72, 153, 0.1);
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .family-tree-person.male:hover {
+        background-color: rgba(59, 130, 246, 0.2);
+        border-color: #2563eb;
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        transform: translateY(-5px);
+    }
+    
+    .family-tree-person.female:hover {
+        background-color: rgba(236, 72, 153, 0.2);
+        border-color: #db2777;
+        box-shadow: 0 6px 20px rgba(236, 72, 153, 0.3);
+        transform: translateY(-5px);
+    }
+    
+    .family-tree-person .name {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: #78350f;
+    }
+    
+    .family-tree-person .details {
+        font-size: 12px;
+        color: #92400e;
+        line-height: 1.4;
+    }
+    
+    .family-tree-spouse {
+        margin-left: 5px;
+    }
+    
+    /* 夫妻连接线样式 */
+    .family-tree-spouse-connection {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px;
+        height: 100%;
+        min-height: 80px;
+    }
+    
+    .family-tree-spouse-connection .connection-line {
+        width: 20px;
+        height: 3px;
+        background: linear-gradient(90deg, #d97706 0%, #f59e0b 50%, #d97706 100%);
+        border-radius: 2px;
+        box-shadow: 0 1px 3px rgba(217, 119, 6, 0.3);
+        position: relative;
+    }
+    
+    .family-tree-spouse-connection .connection-line::before {
+        content: '';
+        position: absolute;
+        left: -2px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        background-color: #d97706;
+        border-radius: 50%;
+        box-shadow: 0 1px 2px rgba(217, 119, 6, 0.3);
+    }
+    
+    .family-tree-spouse-connection .connection-line::after {
+        content: '';
+        position: absolute;
+        right: -2px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        background-color: #d97706;
+        border-radius: 50%;
+        box-shadow: 0 1px 2px rgba(217, 119, 6, 0.3);
+    }
+    
+    .family-tree-children {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .family-tree-connection {
+        position: relative;
+        width: 2px;
+        height: 35px;
+        background-color: #d97706;
+        margin: 0 auto;
+    }
+    
+    /* 多子女连接分支线 */
+    .family-tree-children-branch {
+        width: 100%;
+        height: 2px;
+        background-color: #d97706;
+        position: relative;
+        margin-bottom: 15px;
+        border-radius: 1px;
+        box-shadow: 0 1px 2px rgba(217, 119, 6, 0.3);
+    }
+    
+    .family-tree-children-branch::before,
+    .family-tree-children-branch::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        background-color: #d97706;
+        border-radius: 50%;
+        box-shadow: 0 1px 2px rgba(217, 119, 6, 0.3);
+    }
+    
+    .family-tree-children-branch::before {
+        left: -3px;
+    }
+    
+    .family-tree-children-branch::after {
+        right: -3px;
+    }
+    
+    /* 折叠/展开按钮样式 */
+    .toggle-button {
+        font-size: 12px;
+        font-weight: bold;
+        transition: transform 0.3s ease;
+    }
+
+    
+    /* 滚动条样式 */
+    .family-tree-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .family-tree-container::-webkit-scrollbar-track {
+        background: rgba(217, 119, 6, 0.1);
+        border-radius: 4px;
+    }
+    
+    .family-tree-container::-webkit-scrollbar-thumb {
+        background: rgba(217, 119, 6, 0.3);
+        border-radius: 4px;
+    }
+    
+    .family-tree-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(217, 119, 6, 0.5);
+    }
+
+    /* 最新动态样式 */
+    .news-container {
+        height: 300px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .news-content {
+        animation: scrollNews 30s linear infinite;
+    }
+    
+    @@keyframes scrollNews {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-100%);
+        }
+    }
+    
+    .news-item {
+        display: flex;
+        padding: 12px 0;
+        border-bottom: 1px dashed rgba(217, 119, 6, 0.2);
+        align-items: flex-start;
+    }
+    
+    .news-item:last-child {
+        border-bottom: none;
+    }
+    
+    .news-icon {
+        font-size: 20px;
+        margin-right: 12px;
+        margin-top: 2px;
+        min-width: 24px;
+        text-align: center;
+    }
+    
+    .news-content-item {
+        flex: 1;
+    }
+    
+    .news-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        font-size: 12px;
+    }
+    
+    .news-type {
+        background-color: rgba(217, 119, 6, 0.1);
+        color: #92400e;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+    
+    .news-date {
+        color: #9ca3af;
+    }
+    
+    .news-title {
+        font-weight: 600;
+        color: #78350f;
+        margin-bottom: 4px;
+    }
+    
+    .news-description {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    /* 鼠标悬停暂停动画 */
+    .news-container:hover .news-content {
+        animation-play-state: paused;
+    }
+</style>
+
+<script>
+    // 家族树数据
+    var familyTreeData = @Html.Raw(ViewBag.FamilyTreeData);
+    // 存储节点展开/折叠状态
+    var nodeExpandedState = {};
+    // 当前缩放级别
+    var currentZoom = 1;
+    
+    // 渲染家族树
+    function renderFamilyTree() {
+        var container = document.querySelector('.family-tree');
+        
+        // 清空容器
+        container.innerHTML = '';
+        
+        if (familyTreeData.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted">暂无家族成员数据</div>';
+            return;
+        }
+        
+        // 渲染每个根节点
+        familyTreeData.forEach(rootNode => {
+            var nodeElement = renderNode(rootNode);
+            container.appendChild(nodeElement);
+        });
+    }
+    
+    // 渲染单个节点
+    function renderNode(node) {
+        var nodeContainer = document.createElement('div');
+        nodeContainer.className = 'family-tree-node-container';
+        nodeContainer.dataset.nodeId = node.id;
+        
+        // 渲染当前节点和配偶
+        var personContainer = document.createElement('div');
+        personContainer.className = 'family-tree-node';
+        
+        // 渲染当前成员
+        var personElement = createPersonElement(node);
+        
+        // 添加折叠/展开按钮
+        if (node.children && node.children.length > 0) {
+            var toggleButton = document.createElement('span');
+            toggleButton.className = 'toggle-button inline-block mr-2 cursor-pointer text-amber-600';
+            toggleButton.innerHTML = nodeExpandedState[node.id] ? '▼' : '▶';
+            toggleButton.onclick = function(e) {
+                e.stopPropagation();
+                toggleNode(node.id);
+            };
+            personElement.insertBefore(toggleButton, personElement.firstChild);
+        }
+        
+        personContainer.appendChild(personElement);
+        
+        // 渲染配偶
+        if (node.spouse) {
+            // 添加夫妻连接线
+            var connectionLine = document.createElement('div');
+            connectionLine.className = 'family-tree-spouse-connection';
+            connectionLine.innerHTML = '<div class="connection-line"></div>';
+            personContainer.appendChild(connectionLine);
+            
+            // 渲染配偶
+            var spouseElement = createPersonElement(node.spouse);
+            spouseElement.className += ' family-tree-spouse';
+            personContainer.appendChild(spouseElement);
+        }
+        
+        nodeContainer.appendChild(personContainer);
+        
+        // 渲染子女
+        if (node.children && node.children.length > 0) {
+            var childrenContainer = document.createElement('div');
+            childrenContainer.className = 'family-tree-children';
+            
+            // 渲染子女连接线
+            var connectionElement = document.createElement('div');
+            connectionElement.className = 'family-tree-connection';
+            childrenContainer.appendChild(connectionElement);
+            
+            // 如果有多个子女，添加分支连接线
+            if (node.children && node.children.length > 1) {
+                var branchElement = document.createElement('div');
+                branchElement.className = 'family-tree-children-branch';
+                childrenContainer.appendChild(branchElement);
+            }
+            
+            // 渲染子女节点
+            var childrenLevel = document.createElement('div');
+            childrenLevel.className = 'family-tree-level';
+            childrenLevel.style.display = nodeExpandedState[node.id] ? 'flex' : 'none';
+            
+            node.children.forEach(child => {
+                var childElement = renderNode(child);
+                childrenLevel.appendChild(childElement);
+            });
+            
+            childrenContainer.appendChild(childrenLevel);
+            nodeContainer.appendChild(childrenContainer);
+        }
+        
+        return nodeContainer;
+    }
+    
+    // 创建成员元素
+    function createPersonElement(person) {
+        var element = document.createElement('div');
+        element.className = 'family-tree-person ' + person.gender.toLowerCase();
+        
+        // 添加头像或占位符
+        var avatarElement;
+        if (person.imageUrl) {
+            avatarElement = document.createElement('img');
+            avatarElement.className = 'family-tree-avatar ' + person.gender.toLowerCase();
+            avatarElement.src = person.imageUrl;
+            avatarElement.alt = person.name;
+            avatarElement.onerror = function() {
+                // 如果图片加载失败，显示占位符
+                this.style.display = 'none';
+                var placeholder = createAvatarPlaceholder(person);
+                this.parentNode.insertBefore(placeholder, this);
+            };
+        } else {
+            avatarElement = createAvatarPlaceholder(person);
+        }
+        
+        element.appendChild(avatarElement);
+        
+        // 添加成员信息
+        var nameElement = document.createElement('div');
+        nameElement.className = 'name';
+        nameElement.textContent = person.name;
+        element.appendChild(nameElement);
+        
+        var detailsElement = document.createElement('div');
+        detailsElement.className = 'details';
+        
+        // 添加世代信息
+        if (person.generation) {
+            detailsElement.textContent += '第' + person.generation + '代 ';
+        }
+        
+        // 添加生卒信息
+        if (person.birthDate) {
+            detailsElement.textContent += person.birthDate;
+            if (person.deathDate) {
+                detailsElement.textContent += ' - ' + person.deathDate;
+            }
+        }
+        
+        if (detailsElement.textContent) {
+            element.appendChild(detailsElement);
+        }
+        
+        return element;
+    }
+    
+    // 创建头像占位符
+    function createAvatarPlaceholder(person) {
+        var placeholder = document.createElement('div');
+        placeholder.className = 'family-tree-avatar-placeholder ' + person.gender.toLowerCase();
+        
+        // 显示名字的首字母或性别符号
+        var content;
+        if (person.name && person.name.length > 0) {
+            content = person.name.charAt(0).toUpperCase();
+        } else {
+            content = person.gender.toLowerCase() === 'male' ? '♂' : '♀';
+        }
+        
+        placeholder.textContent = content;
+        return placeholder;
+    }
+    
+    // 切换节点展开/折叠状态
+    function toggleNode(nodeId) {
+        nodeExpandedState[nodeId] = !nodeExpandedState[nodeId];
+        renderFamilyTree();
+    }
+    
+    // 展开所有节点
+    function expandAllNodes() {
+        function traverse(node) {
+            if (node.children && node.children.length > 0) {
+                nodeExpandedState[node.id] = true;
+                node.children.forEach(child => traverse(child));
+            }
+        }
+        
+        familyTreeData.forEach(rootNode => traverse(rootNode));
+        renderFamilyTree();
+    }
+    
+    // 折叠所有节点
+    function collapseAllNodes() {
+        function traverse(node) {
+            if (node.children && node.children.length > 0) {
+                nodeExpandedState[node.id] = false;
+                node.children.forEach(child => traverse(child));
+            }
+        }
+        
+        familyTreeData.forEach(rootNode => traverse(rootNode));
+        renderFamilyTree();
+    }
+    
+    // 导出PDF功能
+    function exportFamilyTreeToPDF() {
+        // 创建jsPDF实例
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        // 获取家族树容器和内部元素
+        const familyTreeContainer = document.querySelector('.family-tree-container');
+        const familyTree = document.querySelector('.family-tree');
+        
+        // 临时修改容器样式，确保所有内容可见
+        const originalContainerMaxHeight = familyTreeContainer.style.maxHeight;
+        const originalContainerOverflow = familyTreeContainer.style.overflow;
+        const originalTreeTransform = familyTree.style.transform;
+        
+        // 移除容器的所有限制，确保完整显示
+        familyTreeContainer.style.maxHeight = 'none';
+        familyTreeContainer.style.overflow = 'visible';
+        familyTreeContainer.style.width = 'max-content';
+        
+        // 重置缩放，确保完整显示所有内容
+        familyTree.style.transform = 'scale(1)';
+        
+        // 强制重绘以确保样式生效
+        familyTreeContainer.offsetHeight;
+        
+        // 使用html2canvas将家族树转换为canvas
+        html2canvas(familyTreeContainer, {
+            scale: 2, // 提高分辨率
+            useCORS: true,
+            backgroundColor: '#fffaf0',
+            logging: false,
+            letterRendering: true,
+            useOverflow: true, // 确保捕获溢出内容
+            scrollX: 0, // 确保从最左侧开始捕获
+            scrollY: 0  // 确保从最顶部开始捕获
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            
+            // 计算图片在PDF中的尺寸
+            const pdfWidth = 280;
+            const pdfHeight = 210;
+            const imgWidth = pdfWidth;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            // 如果图片高度超过单页，需要分页
+            let heightLeft = imgHeight;
+            let position = 0;
+            
+            // 添加第一页
+            doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pdfHeight;
+            
+            // 如果内容超过一页，添加更多页面
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                doc.addPage();
+                doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
+            
+            // 保存PDF
+            doc.save('家族树.pdf');
+            
+            // 恢复容器原始样式
+            familyTreeContainer.style.maxHeight = originalContainerMaxHeight;
+            familyTreeContainer.style.overflow = originalContainerOverflow;
+            familyTreeContainer.style.width = '';
+            familyTree.style.transform = originalTreeTransform;
+        }).catch(error => {
+            console.error('导出PDF失败:', error);
+            alert('导出PDF失败，请重试');
+            
+            // 即使失败也恢复容器原始样式
+            familyTreeContainer.style.maxHeight = originalContainerMaxHeight;
+            familyTreeContainer.style.overflow = originalContainerOverflow;
+            familyTreeContainer.style.width = '';
+            familyTree.style.transform = originalTreeTransform;
+        });
+    }
+    
+    // 缩放控制函数
+    function setZoom(zoom) {
+        currentZoom = zoom;
+        var treeContainer = document.querySelector('.family-tree');
+        treeContainer.style.transform = `scale(${currentZoom})`;
+        treeContainer.style.transformOrigin = 'top center';
+        
+        // 更新缩放滑块和显示值
+        document.getElementById('zoomSlider').value = currentZoom;
+        document.getElementById('zoomValue').textContent = Math.round(currentZoom * 100) + '%';
+    }
+    
+    // 搜索功能
+    function searchFamilyMember(query) {
+        if (!query.trim()) {
+            renderFamilyTree();
+            return;
+        }
+        
+        // 简单的搜索实现，仅作为示例
+        var container = document.querySelector('.family-tree');
+        container.innerHTML = '';
+        
+        // 过滤并高亮匹配的节点
+        function filterAndHighlight(node) {
+            var isMatch = node.name.toLowerCase().includes(query.toLowerCase());
+            
+            // 递归检查子节点
+            var hasMatchingChild = false;
+            if (node.children) {
+                for (var i = 0; i < node.children.length; i++) {
+                    if (filterAndHighlight(node.children[i])) {
+                        hasMatchingChild = true;
+                    }
+                }
+            }
+            
+            // 如果当前节点或其子节点匹配，则展开该节点
+            if (isMatch || hasMatchingChild) {
+                nodeExpandedState[node.id] = true;
+            }
+            
+            return isMatch || hasMatchingChild;
+        }
+        
+        // 过滤匹配的根节点
+        var matchingRoots = familyTreeData.filter(root => filterAndHighlight(root));
+        
+        if (matchingRoots.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted">未找到匹配的家族成员</div>';
+            return;
+        }
+        
+        // 渲染匹配的节点
+        matchingRoots.forEach(rootNode => {
+            var nodeElement = renderNode(rootNode);
+            container.appendChild(nodeElement);
+        });
+    }
+    
+    // 页面加载完成后渲染家族树
+    document.addEventListener('DOMContentLoaded', function() {
+        renderFamilyTree();
+        
+        // 缩放控制事件监听
+        document.getElementById('zoomIn').addEventListener('click', function() {
+            setZoom(currentZoom + 0.1);
+        });
+        
+        document.getElementById('zoomOut').addEventListener('click', function() {
+            setZoom(currentZoom - 0.1);
+        });
+        
+        document.getElementById('zoomSlider').addEventListener('input', function(e) {
+            setZoom(parseFloat(e.target.value));
+        });
+        
+        // 搜索功能事件监听
+        document.getElementById('searchButton').addEventListener('click', function() {
+            var query = document.getElementById('searchInput').value;
+            searchFamilyMember(query);
+        });
+        
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                var query = e.target.value;
+                searchFamilyMember(query);
+            }
+        });
+        
+        // 树控制按钮事件监听
+        document.getElementById('expandAll').addEventListener('click', function() {
+            expandAllNodes();
+        });
+        
+        document.getElementById('collapseAll').addEventListener('click', function() {
+            collapseAllNodes();
+        });
+        
+        // PDF导出按钮事件监听
+        document.getElementById('exportPdf').addEventListener('click', function() {
+            exportFamilyTreeToPDF();
+        });
+        
+        // 鼠标滚轮缩放事件监听
+        document.getElementById('familyTree').addEventListener('wheel', function(e) {
+            e.preventDefault(); // 阻止默认滚动行为
+            
+            // 计算新的缩放级别
+            const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            const newZoom = currentZoom * zoomFactor;
+            
+            // 限制缩放范围在0.5到2之间
+            const limitedZoom = Math.max(0.5, Math.min(2, newZoom));
+            
+            // 设置新的缩放级别
+            setZoom(limitedZoom);
+        });
+        
+        // 更多模块按钮事件监听
+        document.getElementById('toggleMore').addEventListener('click', function() {
+            var moreStats = document.querySelectorAll('#moreStats');
+            var toggleText = document.getElementById('toggleText');
+            var toggleIcon = document.getElementById('toggleIcon');
+            var isExpanded = !toggleText.textContent.includes('更多');
+            
+            if (isExpanded) {
+                // 收起更多模块
+                moreStats.forEach(function(element) {
+                    element.classList.add('hidden');
+                });
+                toggleText.textContent = '更多模块';
+                toggleIcon.style.transform = 'rotate(0deg)';
+            } else {
+                // 展开更多模块
+                moreStats.forEach(function(element) {
+                    element.classList.remove('hidden');
+                });
+                toggleText.textContent = '收起模块';
+                toggleIcon.style.transform = 'rotate(180deg)';
+            }
+        });
+    });
+</script>

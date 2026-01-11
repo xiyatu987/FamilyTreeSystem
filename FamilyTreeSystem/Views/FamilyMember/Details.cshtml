@@ -1,0 +1,163 @@
+@model FamilyTreeSystem.Models.FamilyMember
+
+@{ ViewData["Title"] = "成员详情"; }
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="hero-title text-3xl font-bold text-amber-900">成员详情</h1>
+        <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+            返回列表
+        </a>
+    </div>
+
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8">
+        <!-- 头像显示 -->
+        <div class="mb-8">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="@($"{Model.FullName}的头像")" class="rounded-lg shadow-md" style="max-width: 200px; max-height: 200px;" />
+            }
+            else
+            {
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 w-40 text-amber-700">
+                    暂无头像
+                </div>
+            }
+        </div>
+        
+        <!-- 每行两个字段的布局 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">ID:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.Id</div>
+            </div>
+
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">宗族:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.Clan?.Name ?? "未指定")</div>
+            </div>
+
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">父亲:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.Father != null ? Model.Father.FullName : "未指定")</div>
+            </div>
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">母亲:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.Mother != null ? Model.Mother.FullName : "未指定")</div>
+            </div>
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">世代:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.Ziwei?.Generation ?? Model.Generation)</div>
+            </div>
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">字辈:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.Ziwei?.ZiweiChar ?? "未指定")</div>
+            </div>
+
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">姓名:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.FullName</div>
+            </div>
+
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">性别:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.GenderDisplay</div>
+            </div>
+
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">是否在世:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.IsAlive ? "是" : "否")</div>
+            </div>
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">配偶:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.Spouse != null ? Model.Spouse.FullName : "未指定")</div>
+            </div>
+
+            
+        </div>
+
+        <!-- 更多信息折叠区域 -->
+        <div class="border-t pt-6 mt-6">
+            <button type="button" onclick="toggleMoreInfo()" class="flex items-center justify-between w-full p-4 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors">
+                <span class="text-lg font-semibold text-amber-800">更多信息</span>
+                <svg id="moreInfoIcon" class="w-5 h-5 text-amber-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="moreInfoContent" class="hidden mt-4 p-4 bg-white rounded-lg border">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">曾用名:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.FormerName ?? "未填写")</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">手机号:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.PhoneNumber ?? "未填写")</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">证件地址:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.CertificateAddress ?? "未填写")</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">身份证号:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.IDCardNumber ?? "未填写")</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">教育程度:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.EducationLevel ?? "未填写")</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">毕业院校:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.GraduateSchool ?? "未填写")</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">工作单位:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.WorkUnit ?? "未填写")</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-amber-700 font-medium mb-2">功德款:</label>
+                        <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.MeritContribution?.ToString() ?? "未填写")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 描述单独一行 -->
+        <div class="mt-8">
+            <label class="block text-amber-700 font-medium mb-2">个人简介:</label>
+            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.Description</div>
+        </div>
+
+        <!-- 按钮部分 -->
+        <div class="flex justify-end gap-3 pt-6 border-t">
+            <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+                返回列表
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                编辑
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleMoreInfo() {
+    const content = document.getElementById('moreInfoContent');
+    const icon = document.getElementById('moreInfoIcon');
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        content.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+</script>

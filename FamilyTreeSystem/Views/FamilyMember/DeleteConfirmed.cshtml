@@ -1,0 +1,64 @@
+@model FamilyTreeSystem.Models.FamilyMember
+
+@{ ViewData["Title"] = "删除完成"; }
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-green-50 border-l-4 border-green-400 p-6 mb-6 rounded-lg">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p class="text-lg font-medium text-green-800">删除成功！</p>
+                <p class="text-green-700">成员 "<strong>@Model?.FullName</strong>" 已成功从家族成员列表中移除。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-amber-100 p-6 max-w-2xl mx-auto">
+        <h2 class="text-xl font-semibold text-amber-800 mb-4">删除详情</h2>
+        
+        <div class="space-y-4">
+            <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                <span class="text-gray-600">成员ID</span>
+                <span class="font-medium text-gray-900">@Model?.Id</span>
+            </div>
+            
+            <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                <span class="text-gray-600">成员姓名</span>
+                <span class="font-medium text-gray-900">@Model?.FullName</span>
+            </div>
+            
+            <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                <span class="text-gray-600">性别</span>
+                <span class="font-medium text-gray-900">@Model?.GenderDisplay</span>
+            </div>
+            
+            <div class="flex justify-between items-center py-2">
+                <span class="text-gray-600">删除时间</span>
+                <span class="font-medium text-gray-900">@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</span>
+            </div>
+        </div>
+        
+        <div class="mt-6 flex justify-center">
+            <a asp-action="Index" class="px-8 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors duration-300 shadow-lg font-medium">
+                返回成员列表
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-6 text-center">
+        <p class="text-sm text-gray-500">
+            如果您误删了重要信息，请联系系统管理员进行恢复操作。
+        </p>
+    </div>
+</div>
+
+<script>
+    // 页面加载完成后自动跳转到成员列表页面（可选）
+    // setTimeout(function() {
+    //     window.location.href = '@Url.Action("Index", "FamilyMember")';
+    // }, 5000); // 5秒后自动跳转
+</script>

@@ -1,0 +1,428 @@
+@model FamilyTreeSystem.Models.FamilyMember
+
+@{ ViewData["Title"] = "添加新成员"; }
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="hero-title text-3xl font-bold text-amber-900">添加新成员</h1>
+        <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+            返回列表
+        </a>
+    </div>
+
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8">
+        <form asp-action="Create" class="space-y-6" enctype="multipart/form-data">
+            <!-- 头像上传 -->
+            <div class="space-y-2">
+                <label class="block text-amber-700 font-medium">头像</label>
+                <div class="flex items-center gap-3">
+                    <input type="file" name="profileImage" accept="image/*" class="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200" />
+                    <small class="text-gray-500">支持JPG、PNG等图片格式</small>
+                </div>
+            </div>
+
+            <!-- 宗族选择 -->
+            <div>
+                <label asp-for="ClanId" class="block text-amber-700 font-medium mb-2">宗族</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                    <select asp-for="ClanId" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none">
+                            @if (ViewBag.ClanList != null && ViewBag.ClanList.Count > 0)
+                            {
+                                var firstClan = ViewBag.ClanList[0];
+                                if (firstClan != null)
+                                {
+                                    <option value="@firstClan.Id" selected>@firstClan.Name</option>
+                                }
+                                @for (int i = 1; i < ViewBag.ClanList.Count; i++)
+                                {
+                                    var clan = ViewBag.ClanList[i];
+                                    if (clan != null)
+                                    {
+                                        <option value="@clan.Id">@clan.Name</option>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <option value="">请选择</option>
+                            }
+                        </select>
+                    <span asp-validation-for="ClanId" class="text-danger block mt-1"></span>
+                </div>
+            </div>
+    <!-- 父亲 --> 
+                <div>
+                    <label asp-for="FatherId" class="block text-amber-700 font-medium mb-2">父亲</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select asp-for="FatherId" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" id="fatherSelect">
+                            <option value="">请选择父亲</option>
+                            @if (ViewBag.FatherList != null)
+                            {
+                                @foreach (var father in ViewBag.FatherList)
+                                {
+                                    if (father != null)
+                                    {
+                                        <option value="@father.Id" data-generation="@father.Generation" data-ziwei="@(father.ZiweiId?.ToString() ?? string.Empty)" selected="@(Model != null && father.Id == Model.FatherId)">@father.FullName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="FatherId" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- 母亲 -->
+                <div>
+                    <label asp-for="MotherId" class="block text-amber-700 font-medium mb-2">母亲</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select asp-for="MotherId" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" id="motherSelect">
+                            <option value="">请选择母亲</option>
+                            @if (ViewBag.MotherList != null)
+                            {
+                                @foreach (var mother in ViewBag.MotherList)
+                                {
+                                    if (mother != null)
+                                    {
+                                        <option value="@mother.Id" data-generation="@mother.Generation" data-ziwei="@(mother.ZiweiId?.ToString() ?? string.Empty)" selected="@(Model != null && mother.Id == Model.MotherId)">@mother.FullName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="MotherId" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+            <!-- 字段布局：使用两列网格布局 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 世代 -->
+                <div style="display: none;">
+                    <label asp-for="Generation" class="block text-amber-700 font-medium mb-2">世代</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <input asp-for="Generation" type="number" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                        <span asp-validation-for="Generation" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- 字辈 -->
+                <div>
+                    <label asp-for="ZiweiId" class="block text-amber-700 font-medium mb-2">字辈</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select asp-for="ZiweiId" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none">
+                            <option value="">请选择</option>
+                            @if (ViewBag.ZiweiList != null)
+                            {
+                                @foreach (var ziwei in ViewBag.ZiweiList)
+                                {
+                                    @if (ziwei != null)
+                                    {
+                                        <option value="@ziwei.ZiweiId">@ziwei.ZiweiChar</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="ZiweiId" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- 全名 -->
+                <div class="md:col-span-2">
+                    <label for="FullName" class="block text-amber-700 font-medium mb-2">姓名</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <input type="text" id="FullName" name="FullName" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" required placeholder="请输入全名" />
+                    </div>
+                </div>
+
+                <!-- 性别 -->
+                <div>
+                    <label asp-for="Gender" class="block text-amber-700 font-medium mb-2">性别</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select asp-for="Gender" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none">
+                            <option value="">请选择</option>
+                            <option value="Male">男</option>
+                            <option value="Female">女</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- 是否在世 -->
+                <div>
+                    <label asp-for="IsAlive" class="block text-amber-700 font-medium mb-2">是否在世</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select asp-for="IsAlive" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none">
+                            <option value="true" selected>是</option>
+                            <option value="false">否</option>
+                        </select>
+                        <span asp-validation-for="IsAlive" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+
+            
+            </div>
+
+            <!-- 配偶选择 - 两列网格布局 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 配偶选择方式 -->
+                <div class="md:col-span-2">
+                    <label class="block text-amber-700 font-medium mb-3">配偶</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2">
+                                <input type="radio" id="spouseTypeExisting" name="spouseType" value="existing" checked class="h-4 w-4 text-amber-600 border-gray-300 focus:ring-amber-500">
+                                <label class="text-amber-700" for="spouseTypeExisting">选择现有成员</label>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="radio" id="spouseTypeNew" name="spouseType" value="new" class="h-4 w-4 text-amber-600 border-gray-300 focus:ring-amber-500">
+                                <label class="text-amber-700" for="spouseTypeNew">手动输入新配偶</label>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            
+            <!-- 现有配偶选择 -->
+                <div id="existingSpouseDiv">
+                    <label asp-for="SpouseId" class="block text-amber-700 font-medium mb-2">现有配偶</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select asp-for="SpouseId" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" id="spouseSelect">
+                            <option value="">请选择配偶</option>
+                            @if (ViewBag.SpouseList != null)
+                            {
+                                @foreach (var spouse in ViewBag.SpouseList)
+                                {
+                                    @if (spouse != null)
+                                    {
+                                        <option value="@spouse.Id">@spouse.FullName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="SpouseId" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- 与配偶关系 -->
+                <div id="spouseRelationDiv">
+                    <label asp-for="SpouseRelationType" class="block text-amber-700 font-medium mb-2">与配偶关系</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select asp-for="SpouseRelationType" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none">
+                            <option value="">请选择关系</option>
+                            <option value="5">原配</option>
+                            <option value="6">再婚</option>
+                        </select>
+                        <span asp-validation-for="SpouseRelationType" class="text-danger block mt-1"></span>
+                    </div>
+                </div>
+                
+                <!-- 新配偶姓名 -->
+                <div id="newSpouseDiv" style="display: none;">
+                    <label for="newSpouseName" class="block text-amber-700 font-medium mb-2">配偶姓名</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <input type="text" id="newSpouseName" name="newSpouseName" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" placeholder="请输入配偶姓名">
+                    </div>
+                </div>
+                
+                <!-- 新配偶性别 -->
+                <div id="newSpouseGenderDiv" style="display: none;">
+                    <label for="newSpouseGender" class="block text-amber-700 font-medium mb-2">配偶性别</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <select id="newSpouseGender" name="newSpouseGender" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none">
+                            <option value="Male">男</option>
+                            <option value="Female">女</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 新配偶世代 -->
+                <div id="newSpouseGenerationDiv" style="display: none;">
+                    <label for="newSpouseGeneration" class="block text-amber-700 font-medium mb-2">配偶世代</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                        <input type="number" id="newSpouseGeneration" name="newSpouseGeneration" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" placeholder="配偶世代（默认等于当前成员世代）">
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- 更多信息折叠区域 -->
+            <div class="border-t pt-6">
+                <button type="button" onclick="toggleMoreInfo()" class="flex items-center justify-between w-full p-4 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors">
+                    <span class="text-lg font-semibold text-amber-800">更多信息</span>
+                    <svg id="moreInfoIcon" class="w-5 h-5 text-amber-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="moreInfoContent" class="hidden mt-4 p-4 bg-white rounded-lg border">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 曾用名 -->
+                        <div>
+                            <label asp-for="FormerName" class="block text-amber-700 font-medium mb-2">曾用名</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="FormerName" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="FormerName" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- 手机号 -->
+                        <div>
+                            <label asp-for="PhoneNumber" class="block text-amber-700 font-medium mb-2">手机号</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="PhoneNumber" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- 证件地址 -->
+                        <div>
+                            <label asp-for="CertificateAddress" class="block text-amber-700 font-medium mb-2">证件地址</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="CertificateAddress" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="CertificateAddress" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- 身份证号 -->
+                        <div>
+                            <label asp-for="IDCardNumber" class="block text-amber-700 font-medium mb-2">身份证号</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="IDCardNumber" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="IDCardNumber" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- 教育程度 -->
+                        <div>
+                            <label asp-for="EducationLevel" class="block text-amber-700 font-medium mb-2">教育程度</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="EducationLevel" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="EducationLevel" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- 毕业院校 -->
+                        <div>
+                            <label asp-for="GraduateSchool" class="block text-amber-700 font-medium mb-2">毕业院校</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="GraduateSchool" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="GraduateSchool" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- 工作单位 -->
+                        <div>
+                            <label asp-for="WorkUnit" class="block text-amber-700 font-medium mb-2">工作单位</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="WorkUnit" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="WorkUnit" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- 功德款 -->
+                        <div>
+                            <label asp-for="MeritContribution" class="block text-amber-700 font-medium mb-2">功德款</label>
+                            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                                <input asp-for="MeritContribution" type="number" step="0.01" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none" />
+                                <span asp-validation-for="MeritContribution" class="text-danger block mt-1"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!-- 描述 -->
+            <div>
+                <label asp-for="Description" class="block text-amber-700 font-medium mb-2">个人简介</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">
+                    <textarea asp-for="Description" rows="4" class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none"></textarea>
+                    <span asp-validation-for="Description" class="text-danger block mt-1"></span>
+                </div>
+            </div>
+
+            <!-- 表单操作按钮 -->
+            <div class="flex justify-end gap-3 pt-6 border-t">
+                <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+                    取消
+                </a>
+                <input type="submit" value="添加" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            
+            // 监听配偶类型选择变化
+            $('input[name="spouseType"]').change(function() {
+                if ($(this).val() === 'existing') {
+                    $('#existingSpouseDiv').show();
+                    $('#newSpouseDiv').hide();
+                    $('#newSpouseGenderDiv').hide();
+                    $('#newSpouseGenerationDiv').hide();
+                    $('#SpouseId').prop('required', false);
+                } else {
+                    $('#existingSpouseDiv').hide();
+                    $('#newSpouseDiv').show();
+                    $('#newSpouseGenderDiv').show();
+                    $('#newSpouseGenerationDiv').show();
+                    $('#SpouseId').val('');
+                    $('#SpouseId').prop('required', false);
+                    
+                    // 自动设置配偶世代为当前成员世代
+                    var currentGeneration = $('#Generation').val();
+                    if (currentGeneration) {
+                        $('#newSpouseGeneration').val(currentGeneration);
+                    }
+                }
+            });
+
+            // 监听世代字段变化，自动更新配偶世代
+            $('#Generation').change(function() {
+                var currentGeneration = $(this).val();
+                if (currentGeneration && $('#spouseTypeNew').is(':checked')) {
+                    $('#newSpouseGeneration').val(currentGeneration);
+                }
+            });
+
+            // 监听父亲选择变化，自动更新世代和字辈
+            $('#fatherSelect').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                var fatherGeneration = selectedOption.data('generation');
+                var fatherZiweiId = selectedOption.data('ziwei');
+                
+                if (fatherGeneration !== undefined && fatherGeneration !== null) {
+                    // 当前人员的世代 = 父亲世代 + 1
+                    var currentGeneration = parseInt(fatherGeneration) + 1;
+                    $('#Generation').val(currentGeneration);
+                    console.log('根据父亲更新世代: ' + currentGeneration);
+                    
+                    // 如果有父亲的字辈ID，可以在此处处理字辈逻辑
+                    if (fatherZiweiId !== undefined && fatherZiweiId !== null) {
+                        console.log('父亲字辈ID: ' + fatherZiweiId);
+                        // 这里可以添加逻辑来获取下一个字辈
+                        // 目前暂时不自动设置字辈，用户可以手动选择
+                    }
+                }
+            });
+
+            // 监听母亲选择变化，自动更新世代和字辈
+            $('#motherSelect').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                var motherGeneration = selectedOption.data('generation');
+                var motherZiweiId = selectedOption.data('ziwei');
+                
+                if (motherGeneration !== undefined && motherGeneration !== null) {
+                    // 当前人员的世代 = 母亲世代 + 1
+                    var currentGeneration = parseInt(motherGeneration) + 1;
+                    $('#Generation').val(currentGeneration);
+                    console.log('根据母亲更新世代: ' + currentGeneration);
+                    
+                    // 如果有母亲的字辈ID，可以在此处处理字辈逻辑
+                    if (motherZiweiId !== undefined && motherZiweiId !== null) {
+                        console.log('母亲字辈ID: ' + motherZiweiId);
+                        // 这里可以添加逻辑来获取下一个字辈
+                        // 目前暂时不自动设置字辈，用户可以手动选择
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,77 @@
+@model FamilyTreeSystem.Models.ClanActivity
+
+@{ ViewData["Title"] = "编辑宗族活动"; }
+
+<h1 class="text-2xl font-bold text-amber-800 mb-6">编辑宗族活动</h1>
+
+<hr class="border-amber-200 mb-6" />
+<div class="max-w-3xl mx-auto">
+    <form asp-action="Edit" class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-6"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+            <label asp-for="Title" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2"></label>
+            <div class="sm:col-span-4">
+                <input asp-for="Title" class="w-full px-4 py-2 border border-amber-200 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition-colors duration-300" />
+                <span asp-validation-for="Title" class="text-danger text-sm block mt-1"></span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-4 mt-6">
+            <label asp-for="Category" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2"></label>
+            <div class="sm:col-span-4">
+                <select asp-for="Category" class="w-full px-4 py-2 border border-amber-200 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition-colors duration-300">
+                    <option value="祭祖活动">祭祖活动</option>
+                    <option value="年度聚会">年度聚会</option>
+                    <option value="编修族谱">编修族谱</option>
+                    <option value="口述历史">口述历史</option>
+                    <option value="养老扶幼">养老扶幼</option>
+                    <option value="创业交流">创业交流</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger text-sm block mt-1"></span>
+            </div>
+        </div>
+           <div class="grid grid-cols-1 sm:grid-cols-6 gap-4 mt-6">
+            <label asp-for="ActivityDate" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2"></label>
+            <div class="sm:col-span-4">
+                <input asp-for="ActivityDate" type="date" class="w-full px-4 py-2 border border-amber-200 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition-colors duration-300" />
+                <span asp-validation-for="ActivityDate" class="text-danger text-sm block mt-1"></span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-4 mt-6">
+            <label asp-for="Location" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2"></label>
+            <div class="sm:col-span-4">
+                <input asp-for="Location" class="w-full px-4 py-2 border border-amber-200 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition-colors duration-300" />
+                <span asp-validation-for="Location" class="text-danger text-sm block mt-1"></span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-4 mt-6">
+            <label asp-for="Description" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2"></label>
+            <div class="sm:col-span-4">
+                <textarea asp-for="Description" class="w-full px-4 py-2 border border-amber-200 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition-colors duration-300 tinymce-editor" rows="8"></textarea>
+                <span asp-validation-for="Description" class="text-danger text-sm block mt-1"></span>
+            </div>
+        </div>
+     
+
+        <div class="flex gap-4 justify-end mt-8 pt-4 border-t border-amber-100">
+            <a asp-action="Index" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors shadow-md">取消</a>
+            <input type="submit" value="保存" class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors shadow-lg" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '.tinymce-editor',
+            plugins: 'advlist autolink lists link image charmap print preview anchor',
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            height: 400,
+            menubar: false,
+            statusbar: false
+        });
+    </script>
+}

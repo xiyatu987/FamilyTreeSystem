@@ -1,0 +1,117 @@
+/* 移动端家族树样式 */
+@media (max-width: 768px) {
+    .family-tree-container {
+        padding: 8px;
+        max-height: 60vh;
+        font-size: 12px;
+    }
+    
+    .family-tree-level {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 10px;
+    }
+    
+    .family-tree-node {
+        margin: 10px 0;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .family-tree-node::before {
+        display: none;
+    }
+    
+    .family-tree-person {
+        min-width: 90px;
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    
+    .family-tree-person .name {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+    
+    .family-tree-person .details {
+        font-size: 10px;
+    }
+    
+    .family-tree-spouse {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+    
+    /* 移动端水平滑动优化 */
+    .family-tree {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .family-tree-node-container {
+        margin: 0 5px 15px 5px;
+    }
+    
+    .family-tree-children {
+        margin-top: 15px;
+    }
+    
+    /* 统计卡片移动端优化 */
+    .grid-cols-1 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    .text-5xl {
+        font-size: 2.5rem;
+    }
+    
+    .text-xl {
+        font-size: 1.25rem;
+    }
+    
+    /* 最新动态移动端优化 */
+    .news-container {
+        height: 250px;
+    }
+    
+    .news-item {
+        padding: 8px 0;
+    }
+    
+    .news-icon {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+    
+    .news-title {
+        font-size: 14px;
+    }
+    
+    .news-description {
+        font-size: 12px;
+    }
+    
+    /* 家族树控制工具栏移动端优化 */
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+    
+    .gap-4 {
+        gap: 0.5rem;
+    }
+    
+    .px-3 {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .py-1 {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+    
+    .w-32 {
+        width: 8rem;
+    }
+}

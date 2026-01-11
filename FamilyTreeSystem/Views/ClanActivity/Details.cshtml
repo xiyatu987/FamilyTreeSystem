@@ -1,0 +1,52 @@
+@model FamilyTreeSystem.Models.ClanActivity
+
+@{ ViewData["Title"] = "宗族活动详情"; }
+
+<h1 class="text-2xl font-bold text-amber-800 mb-6">宗族活动详情</h1>
+
+<div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100 max-w-4xl mx-auto">
+    <h4 class="text-xl font-semibold text-amber-700 mb-4">@Model.Title</h4>
+    <hr class="border-amber-200 mb-6" />
+    <dl class="grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-4">
+         <dt class="sm:col-span-2 font-medium text-amber-700">
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd class="sm:col-span-4 text-amber-800">
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+           <dt class="sm:col-span-2 font-medium text-amber-700">
+            @Html.DisplayNameFor(model => model.ActivityDate)
+        </dt>
+        <dd class="sm:col-span-4 text-amber-800">
+            @Html.DisplayFor(model => model.ActivityDate)
+        </dd>
+        <dt class="sm:col-span-2 font-medium text-amber-700">
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+        <dd class="sm:col-span-4 text-amber-800">
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+      
+        <dt class="sm:col-span-2 font-medium text-amber-700">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="sm:col-span-4 text-amber-800">
+            <div class="text-area-display">@Html.Raw(Model.Description)</div>
+        </dd>
+       
+       
+
+
+    </dl>
+</div>
+<div class="mt-6 max-w-4xl mx-auto flex justify-center gap-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="px-5 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors duration-300 font-medium shadow-md">编辑</a>
+    <a asp-action="Index" class="px-5 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-300 font-medium shadow-md">返回列表</a>
+</div>
+
+<style>
+    .text-area-display {
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+</style>

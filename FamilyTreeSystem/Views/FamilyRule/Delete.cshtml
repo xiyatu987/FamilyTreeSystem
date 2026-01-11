@@ -1,0 +1,42 @@
+@model FamilyTreeSystem.Models.FamilyRule
+
+@{ ViewData["Title"] = "删除祖训"; }
+
+<h1 class="text-2xl font-bold text-amber-800 mb-6">删除祖训</h1>
+
+<div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 border border-amber-100 max-w-2xl mx-auto">
+    <div class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6">
+    <h3 class="text-xl font-semibold text-amber-800 mb-2">确定要删除祖训"@Model.Title"吗？</h3>
+    <p class="text-amber-700">此操作不可逆，删除后祖训信息将无法恢复。</p>
+</div>
+    <h4 class="text-lg font-medium text-amber-800 mb-4">祖训信息</h4>
+    <hr class="border-amber-200 mb-6" />
+    <dl class="grid grid-cols-1 gap-4 sm:grid-cols-6">
+        <dt class="sm:col-span-2 font-medium text-amber-700">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="sm:col-span-4 text-amber-800">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="sm:col-span-2 font-medium text-amber-700">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class="sm:col-span-4 text-amber-800">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt class="sm:col-span-2 font-medium text-amber-700">
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+        <dd class="sm:col-span-4 text-amber-800">
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" class="mt-6">
+        <input type="hidden" asp-for="Id" />
+        <div class="flex space-x-4 justify-center">
+            <input type="submit" value="删除" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300 font-medium shadow-md" />
+            <a asp-action="Index" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-300 font-medium shadow-md">取消</a>
+        </div>
+    </form>
+</div>

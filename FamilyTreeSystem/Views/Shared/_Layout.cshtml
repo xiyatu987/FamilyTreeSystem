@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 族谱管理系统</title>
+    <script type="importmap"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/mobile.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FamilyTreeSystem.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F5F1E8;
+        }
+        .hero-title {
+            font-family: 'Noto Serif SC', serif;
+        }
+        .member-card {
+            transition: all 0.3s ease;
+        }
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-amber-600 to-amber-800 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">谱</span>
+                        </div>
+                        <span class="hero-title text-xl font-semibold text-amber-800">族谱管理系统</span>
+                    </div>
+                    <!-- 移动端菜单按钮 -->
+                    <button class="mobile-menu-toggle md:hidden" id="mobileMenuToggle">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- 导航链接 -->
+                    <div class="nav-links hidden md:flex space-x-6" id="navLinks">
+                        <a class="text-gray-600 hover:text-amber-800 transition-colors" asp-area="" asp-controller="Home" asp-action="Index">首页</a>
+                        <a class="text-amber-800 font-medium border-b-2 border-amber-600 pb-1" asp-area="" asp-controller="FamilyMember" asp-action="Index">家庭成员管理</a>
+                        <a class="text-gray-600 hover:text-amber-800 transition-colors" asp-area="" asp-controller="Ziwei" asp-action="Index">字辈管理</a>
+                        <a class="text-gray-600 hover:text-amber-800 transition-colors" asp-area="" asp-controller="FamilyRule" asp-action="Index">祖训管理</a>
+                        <a class="text-gray-600 hover:text-amber-800 transition-colors" asp-area="" asp-controller="ClanActivity" asp-action="Index">宗族活动记录</a>
+                        <a class="text-gray-600 hover:text-amber-800 transition-colors" asp-area="" asp-controller="Home" asp-action="Privacy">关于系统</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-white/80 backdrop-blur-md mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <p class="text-gray-600">&copy; 2025 族谱管理系统. 传承家族记忆，连接过去与未来.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- PDF导出所需库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+        // 移动端菜单切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (mobileMenuToggle && navLinks) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    navLinks.classList.toggle('hidden');
+                });
+                
+                // 点击导航链接后关闭菜单
+                const navLinkItems = navLinks.querySelectorAll('a');
+                navLinkItems.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('active');
+                        navLinks.classList.add('hidden');
+                    });
+                });
+                
+                // 点击外部区域关闭菜单
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenuToggle.contains(event.target) && !navLinks.contains(event.target)) {
+                        navLinks.classList.remove('active');
+                        navLinks.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,284 @@
+/*
+ * 中国族谱管理系统 - 传统中国风格CSS
+ * 为webtrees添加中国传统风格样式
+ */
+
+/* 基础样式 */
+body {
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    background-color: #f9f3e9;
+    color: #333;
+}
+
+/* 中国红主题色 */
+:root {
+    --chinese-red: #c8102e;
+    --chinese-gold: #d4af37;
+    --chinese-black: #2c2c2c;
+    --chinese-bg: #f9f3e9;
+    --chinese-paper: #fff9e6;
+}
+
+/* 标题样式 */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Microsoft YaHei', 'SimHei', serif;
+    color: var(--chinese-red);
+    border-bottom: 2px solid var(--chinese-red);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* 按钮样式 - 中国传统按钮 */
+.btn {
+    background-color: var(--chinese-red);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+}
+
+.btn:hover {
+    background-color: #a80d26;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(200, 16, 46, 0.3);
+}
+
+/* 卡片样式 - 中国传统纸张效果 */
+.card {
+    background-color: var(--chinese-paper);
+    border: 1px solid #e0d6c2;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* 导航菜单 */
+.navbar {
+    background-color: var(--chinese-red);
+    color: white;
+    padding: 10px 20px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+    color: var(--chinese-gold);
+    text-decoration: underline;
+}
+
+/* 表格样式 */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: var(--chinese-paper);
+}
+
+table th {
+    background-color: var(--chinese-red);
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    border: 1px solid #e0d6c2;
+}
+
+table td {
+    padding: 10px;
+    border: 1px solid #e0d6c2;
+}
+
+table tr:nth-child(even) {
+    background-color: #f5efe2;
+}
+
+table tr:hover {
+    background-color: #f0e8d5;
+}
+
+/* 表单样式 */
+form {
+    background-color: var(--chinese-paper);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0d6c2;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--chinese-black);
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d0c6b0;
+    border-radius: 4px;
+    background-color: white;
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--chinese-red);
+    box-shadow: 0 0 0 2px rgba(200, 16, 46, 0.2);
+}
+
+/* 中国传统边框装饰 */
+.chinese-border {
+    border: 2px solid var(--chinese-red);
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+}
+
+.chinese-border::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background-color: var(--chinese-paper);
+    padding: 0 10px;
+    color: var(--chinese-red);
+    font-weight: bold;
+}
+
+/* 宗族树样式 */
+.pedigree-tree {
+    background-color: var(--chinese-paper);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0d6c2;
+}
+
+.pedigree-individual {
+    background-color: white;
+    border: 2px solid var(--chinese-red);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.pedigree-individual:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+}
+
+/* 中国传统花纹背景 */
+.chinese-pattern {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f9f3e9"/><path d="M0 50 Q25 25 50 50 T100 50" stroke="%23c8102e" stroke-width="1" fill="none"/><path d="M50 0 Q75 25 50 50 T50 100" stroke="%23c8102e" stroke-width="1" fill="none"/></svg>');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.3;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 0;
+    }
+    
+    .card {
+        padding: 15px;
+    }
+}
+
+/* 字体样式 */
+.chinese-calligraphy {
+    font-family: 'Ma Shan Zheng', cursive, 'Microsoft YaHei', 'SimHei', serif;
+    font-size: 24px;
+    color: var(--chinese-red);
+}
+
+/* 分隔线样式 */
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--chinese-red), transparent);
+    margin: 20px 0;
+}
+
+/* 页脚样式 */
+.footer {
+    background-color: var(--chinese-red);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-top: 40px;
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+}
+
+/* 中国传统装饰元素 */
+.chinese-decoration {
+    position: relative;
+}
+
+.chinese-decoration::before {
+    content: '🔴';
+    position: absolute;
+    left: -25px;
+    top: 0;
+    font-size: 16px;
+}
+
+/* 字辈样式 */
+.ziwei {
+    font-weight: bold;
+    color: var(--chinese-red);
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+/* 亲属关系样式 */
+.kinship {
+    color: var(--chinese-gold);
+    font-style: italic;
+    margin-left: 10px;
+}
+
+/* 传统中国风格的加载动画 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(200, 16, 46, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--chinese-red);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

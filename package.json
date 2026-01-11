@@ -1,0 +1,25 @@
+{
+    "name": "chinese-genealogy-system",
+    "version": "1.0.0",
+    "description": "中国族谱管理系统 - 前端依赖",
+    "main": "index.js",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "watch": "vite watch"
+    },
+    "keywords": ["genealogy", "chinese", "family-tree"],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "bootstrap": "^5.3.2",
+        "jquery": "^3.7.1",
+        "@popperjs/core": "^2.11.8",
+        "chart.js": "^4.4.0",
+        "font-awesome": "^4.7.0"
+    },
+    "devDependencies": {
+        "vite": "^4.5.0",
+        "laravel-vite-plugin": "^1.0.0"
+    }
+}

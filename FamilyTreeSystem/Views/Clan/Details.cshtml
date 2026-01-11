@@ -1,0 +1,102 @@
+@model FamilyTreeSystem.Models.Clan
+
+@{ ViewData["Title"] = "族谱详情"; }
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="hero-title text-3xl font-bold text-amber-900">族谱详情</h1>
+        <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+            返回列表
+        </a>
+    </div>
+
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8">
+        
+        <!-- 基本信息区域 -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-amber-800 mb-4 border-b border-amber-200 pb-2">基本信息</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">ID:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.Id</div>
+                </div>
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">族谱名称:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.Name</div>
+                </div>
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">姓氏:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.ClanSurname</div>
+                </div>
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">创建时间:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 族谱信息区域 -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-amber-800 mb-4 border-b border-amber-200 pb-2">族谱信息</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">堂号:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.HallName ?? "未填写")</div>
+                </div>
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">地区:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.Region ?? "未填写")</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 始祖信息区域 -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-amber-800 mb-4 border-b border-amber-200 pb-2">始祖信息</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">始祖姓名:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.AncestorName ?? "未填写")</div>
+                </div>
+                <div>
+                    <label class="block text-amber-700 font-medium mb-2">始祖生辰:</label>
+                    <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.AncestorBirthDate?.ToString("yyyy-MM-dd") ?? "未填写")</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 地址信息区域 -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-amber-800 mb-4 border-b border-amber-200 pb-2">地址信息</h3>
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">原籍地址:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(Model.OriginalAddress ?? "未填写")</div>
+            </div>
+        </div>
+
+        <!-- 简介区域 -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-amber-800 mb-4 border-b border-amber-200 pb-2">简介</h3>
+            <div>
+                <label class="block text-amber-700 font-medium mb-2">简介:</label>
+                <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@(string.IsNullOrEmpty(Model.Description) ? "未填写" : Model.Description)</div>
+            </div>
+        </div>
+
+        <!-- 更新时间 -->
+        <div class="mb-8">
+            <label class="block text-amber-700 font-medium mb-2">更新时间:</label>
+            <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg">@Model.UpdatedAt.ToString("yyyy-MM-dd HH:mm")</div>
+        </div>
+
+        <!-- 按钮部分 -->
+        <div class="flex justify-end gap-3 pt-6 border-t">
+            <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+                返回列表
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg">
+                编辑
+            </a>
+        </div>
+    </div>
+</div>

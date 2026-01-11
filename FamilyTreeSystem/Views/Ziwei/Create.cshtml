@@ -1,0 +1,57 @@
+@model FamilyTreeSystem.Models.Ziwei
+
+@{ ViewData["Title"] = "添加字辈"; }
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-amber-900">添加字辈</h1>
+        <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+            返回列表
+        </a>
+    </div>
+
+    <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-amber-100 p-6 max-w-2xl">
+        <form asp-action="Create" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger bg-red-50 p-3 rounded-lg"></div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+                <label asp-for="ZiweiChar" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2">字辈</label>
+                <div class="sm:col-span-4">
+                    <input asp-for="ZiweiChar" class="w-full px-4 py-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors duration-300" />
+                    <span asp-validation-for="ZiweiChar" class="text-danger block mt-1"></span>
+                </div>
+            </div>
+            
+
+            
+            <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+                <label asp-for="Generation" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2">所属世代</label>
+                <div class="sm:col-span-4">
+                    <input asp-for="Generation" type="hidden" />
+                    <span asp-validation-for="Generation" class="text-danger block mt-1"></span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
+                <label asp-for="Description" class="sm:col-span-2 text-sm font-medium text-amber-700 pt-2">描述</label>
+                <div class="sm:col-span-4">
+                    <textarea asp-for="Description" rows="4" class="w-full px-4 py-2 border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors duration-300"></textarea>
+                    <span asp-validation-for="Description" class="text-danger block mt-1"></span>
+                </div>
+            </div>
+            
+            <div class="flex justify-end gap-3 pt-6 border-t">
+                <a asp-action="Index" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-3 rounded-lg font-medium transition-colors">
+                    取消
+                </a>
+                <input type="submit" value="保存" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+
+}
