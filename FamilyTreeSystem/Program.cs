@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews()
     // Configure DataAnnotations to use Chinese resource files
@@ -24,6 +25,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+
 // Configure localization for Chinese error messages
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -34,6 +36,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });
+
 
 // Add Entity Framework Core with SQLite
 builder.Services.AddDbContext<FamilyTreeContext>(options =>
@@ -52,6 +55,7 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseRouting();
 
+
 // Use localization
 var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
 app.UseRequestLocalization(localizationOptions);
@@ -67,6 +71,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
 
 
 // 初始化种子数据
